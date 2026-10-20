@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>חומר תורשתי, מחזור התא ומ-DNA לחלבון – פעילות אינטראקטיבית</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600&family=Rubik:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f5f8;--card:#fff;--ink:#14232e;--mut:#51636f;--line:#d3dde3;--dna:#2563c9;--rna:#c4600e;--pro:#16805a;--chr:#7c4dc4;--chr2:#b79be3;--bad:#b42a40;--ok:#16805a;--acc:#14232e;--accT:#fff;--nuc:#e8f0fb}
+:root[data-theme=dark]{--bg:#0f1a21;--card:#17252e;--ink:#e6eef2;--mut:#9bb0bb;--line:#2a3d48;--dna:#6aa0ff;--rna:#f0a15a;--pro:#4cc790;--chr:#a98af0;--chr2:#6b52a8;--bad:#ff7a8c;--ok:#4cc790;--acc:#e6eef2;--accT:#0f1a21;--nuc:#1c3140}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Assistant,Arial,sans-serif}
+h1,h2,h3{font-family:Rubik,Assistant,Arial,sans-serif;line-height:1.3;margin:.2em 0 .5em}
+h1{font-size:1.25rem;margin:0}h2{font-size:1.6rem}h3{font-size:1.15rem}
+header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:.6rem 1rem}
+.top{display:flex;gap:.6rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.score{font-weight:600;color:var(--pro)}
+nav{display:flex;gap:.4rem;overflow-x:auto;padding:.5rem 0 .1rem}
+.st{flex:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:.25rem .8rem;font:inherit;font-size:.9rem;cursor:pointer}
+.st.on{background:var(--acc);color:var(--accT);border-color:var(--acc)}
+.st.seen:not(.on){border-color:var(--pro)}
+.bar{height:4px;background:var(--line);border-radius:4px;margin-top:.4rem}.bar i{display:block;height:100%;background:var(--pro);border-radius:4px;transition:width .3s}
+main{max-width:920px;margin:0 auto;padding:1rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.2rem;margin:1rem 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.7rem}
+.term{border-inline-start:6px solid var(--c);background:var(--bg);border-radius:8px;padding:.5rem .8rem}
+.term b{color:var(--c);font-family:Rubik,sans-serif}
+.t-dna{--c:var(--dna)}.t-rna{--c:var(--rna)}.t-pro{--c:var(--pro)}.t-chr{--c:var(--chr)}
+.dna{color:var(--dna)}.rna{color:var(--rna)}.pro{color:var(--pro)}.chr{color:var(--chr)}
+button,input,select,textarea{font:inherit;color:inherit}
+.btn{background:var(--acc);color:var(--accT);border:0;border-radius:9px;padding:.4rem 1rem;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:default}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--chr);outline-offset:2px}
+.row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin:.5rem 0}
+input[type=range]{flex:1;min-width:160px;accent-color:var(--chr)}
+input[type=text],select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.35rem .6rem}
+textarea{width:100%;min-height:70px}
+svg{width:100%;height:auto;display:block;background:var(--card);border-radius:10px}
+svg text{fill:var(--ink);font-family:Assistant,Arial,sans-serif;font-size:14px}
+.nuc{fill:var(--nuc);stroke:var(--dna);stroke-width:2}.cellc{fill:var(--nuc);stroke:var(--mut);stroke-width:2}
+.opt{display:block;width:100%;text-align:start;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:.45rem .8rem;margin:.3rem 0;cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--card))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 18%,var(--card))}
+.fb{margin:.3rem 0 .8rem;font-size:.95rem}.fb.good{color:var(--ok)}.fb.bad{color:var(--bad)}.fb .btn{margin-inline-start:.5rem;padding:.1rem .7rem}
+.qq{border-bottom:1px dashed var(--line);padding-bottom:.4rem}
+.seq{direction:ltr;display:flex;flex-wrap:wrap;gap:4px;font-family:monospace;font-weight:700;margin:.4rem 0}
+.seq span{min-width:2.4ch;text-align:center;border-radius:6px;padding:.1rem .3rem;border:2px solid transparent}
+.cod{border-color:var(--rna)!important;color:var(--rna)}.aa{border-color:var(--pro)!important;color:var(--pro)}.cur{background:var(--chr2)}
+table{border-collapse:collapse;width:100%;font-size:.95rem}th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:center}th{background:var(--bg)}
+.ok{color:var(--ok)}.no{color:var(--bad)}
+.pick{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:.2rem .7rem;margin:.2rem;background:var(--bg);cursor:pointer}
+.foot{display:flex;justify-content:space-between;margin:1rem 0 3rem}
+.sample{display:none;background:var(--bg);border-inline-start:5px solid var(--pro);padding:.5rem .8rem;margin:.4rem 0;border-radius:6px}.sample.show{display:block}
+@media(max-width:600px){body{font-size:16px}h2{font-size:1.35rem}.card{padding:.8rem}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><h1>גנטיקה ותא – מסע מ-DNA לחלבון</h1>
+ <div class="row" style="margin:0"><span class="score">נקודות: <span id="score">0</span></span>
+ <button class="btn alt" id="dark" aria-label="מצב כהה">מצב כהה</button><button class="btn alt" id="reset">איפוס</button></div></div>
+ <nav id="nav" aria-label="שלבי הפעילות"></nav><div class="bar"><i id="prog"></i></div>
+</header>
+<main id="main"></main>
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var KEY="bio-heredity-v1";
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return {}}}
+var S=load();S.step=S.step||0;S.ok=S.ok||{};S.att=S.att||{};S.seen=S.seen||{};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function sh(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function award(k){if(!S.ok[k]&&!S.att[k]){S.ok[k]=1;save();upd()}else{S.att[k]=1;save()}}
+function upd(){$("#score").textContent=Object.keys(S.ok).length}
+
+/* ---------- חידונים ---------- */
+var Q={
+open:[{q:"איזה מושג מתאר קטע DNA המקודד לתוצר (חלבון או RNA)?",o:["גן","קודון","כרומטידה","ריבוזום"],c:0,e:"גן הוא קטע DNA המקודד לתוצר. קודון הוא שלישייה ב-mRNA, וכרומטידה היא עותק של כרומוזום."},
+{q:"איזה תהליך יוצר mRNA על בסיס גן?",o:["שעתוק","תרגום","שכפול","מיטוזה"],c:0,e:"שעתוק: סינתזת RNA לפי גדיל התבנית של ה-DNA. תרגום הוא יצירת החלבון לפי ה-mRNA."},
+{q:"היכן נמצא רוב החומר התורשתי בתא אאוקריוטי?",o:["בגרעין, בכרומוזומים","בריבוזומים","בקרום התא","בציטופלזמה בלבד"],c:0,e:"ה-DNA מאורגן בכרומוזומים בגרעין (מעט DNA נמצא גם במיטוכונדריה ובכלורופלסטים)."}],
+gen:[{q:"בדגימת DNA דו-גדילי 20% מהבסיסים הם G. מהו אחוז ה-A?",o:["20%","30%","40%","60%"],c:1,e:"G=C=20%, לכן יחד 40%. נשארו 60% ל-A ול-T, ומכיוון ש-A=T כל אחד 30%."},
+{q:"מה מבטיח ששתי מולקולות ה-DNA החדשות זהות לאם?",o:["זיווג בסיסים משלים, וכל גדיל משמש תבנית","רק פעולת ההליקאז","תיקון בעזרת RNA","חלוקת הגרעין"],c:0,e:"כל גדיל ישן משמש תבנית, ובסיסים נקשרים לפי כלל הזיווג (A-T, G-C)."},
+{q:"מולקולת DNA עם 15N בשני גדיליה שוכפלה 3 פעמים בסביבה רגילה. כמה מולקולות מכילות גדיל ישן?",o:["1","2","4","8"],c:1,e:"שכפול שמרני למחצה: שני הגדילים הישנים לא נעלמים, ולכן תמיד 2 מולקולות מתוך 8 מכילות גדיל ישן."}],
+cyc:[{q:"באיזה שלב של האינטרפאזה מתרחש שכפול ה-DNA?",o:["S","G1","G2","M"],c:0,e:"S = סינתזה של DNA. ב-G1 ו-G2 התא גדל ומתכונן."},
+{q:"כמה כרומטידות יש בכל כרומוזום במטאפאזה של מיטוזה?",o:["1","2","4","אפס"],c:1,e:"אחרי שכפול כל כרומוזום מורכב משתי כרומטידות אחיות זהות."},
+{q:"מה קורה באנאפאזה של מיטוזה?",o:["הכרומטידות נפרדות וכל אחת הופכת לכרומוזום","הומולוגים נפרדים","מתרחש קרוסינג־אובר","ה-DNA משתכפל"],c:0,e:"הכרומטידות האחיות נפרדות. הפרדת הומולוגים וקרוסינג־אובר שייכים למיוזה I."}],
+mei:[{q:"באיזה שלב מתרחש קרוסינג־אובר?",o:["פרופאזה I","מטאפאזה II","אנאפאזה I","טלופאזה II"],c:0,e:"בפרופאזה I כרומוזומים הומולוגיים מתחברים ומחליפים קטעים."},
+{q:"במה שונה אנאפאזה I מאנאפאזה II?",o:["ב-I נפרדים הומולוגים, ב-II נפרדות כרומטידות","ב-I נפרדות כרומטידות, ב-II הומולוגים","אין הבדל","ב-II ה-DNA משתכפל"],c:0,e:"מיוזה I מפרידה זוגות הומולוגיים (חלוקה מצמצמת). מיוזה II מפרידה כרומטידות, כמו במיטוזה."},
+{q:"בתא גוף אנושי 2n=46. כמה כרומוזומים בגמטה?",o:["23","46","92","12"],c:0,e:"הגמטה הפלואידית (n) מכילה כרומוזום אחד מכל זוג הומולוגי: 23."}],
+prot:[{q:"איזו חומצה אמינית מקודדת על ידי AUG, ומה תפקידו הנוסף?",o:["Met – קודון התחלה","Gly – קודון סיום","Lys – קודון התחלה","Met – קודון סיום"],c:0,e:"AUG מקודד למתיונין ומסמן את תחילת התרגום."},
+{q:"בגדיל התבנית מופיע TAC. מהו הקודון ב-mRNA?",o:["AUG","UAC","ATG","TAC"],c:0,e:"mRNA משלים לתבנית (A עם U במקום T): TAC ← AUG."},
+{q:"מוטציה שקטה היא:",o:["החלפת בסיס שאינה משנה את חומצת האמינו","החלפה שיוצרת קודון סיום","הוספת בסיס אחד בלבד","מחיקת גן שלם"],c:0,e:"הקוד הגנטי מנוון: כמה קודונים מקודדים לאותה חומצה אמינית."}],
+tf:[{q:"מיטוזה מתרחשת בתאי גוף ויוצרת תאים זהים גנטית לתא האם.",o:["נכון","לא נכון"],c:0,e:"נכון (בהיעדר מוטציות)."},
+{q:"tRNA נושא את הקודון המשלים לאנטי-קודון.",o:["נכון","לא נכון"],c:0,e:"נכון: האנטי-קודון ב-tRNA משלים לקודון ב-mRNA. הניסוח ההפוך הוא הטעות הנפוצה."},
+{q:"בסוף מיוזה נוצרים שני תאים דיפלואידיים.",o:["נכון","לא נכון"],c:1,e:"נוצרים ארבעה תאים הפלואידיים."},
+{q:"בשכפול DNA שני הגדילים משמשים תבנית.",o:["נכון","לא נכון"],c:0,e:"נכון, זהו שכפול שמרני למחצה."}],
+graph:[{q:"בנקודה 6 יש ירידה ראשונה בכמות ה-DNA. מה גורם לה?",o:["חלוקת התא לשני תאים, כל אחד עם כרומוזום מכל זוג הומולוגי","הפרדת כרומטידות","פירוק ה-DNA","התנתקות הליקאז"],c:0,e:"בסוף מיוזה I נוצרים שני תאים, וכמות ה-DNA בכל תא יורדת בחצי."},
+{q:"מדוע בנקודה 9 כמות ה-DNA היא 1 ולא 2?",o:["כל תא קיבל כרומטידה אחת מכל כרומוזום","ה-DNA התפרק","התא איבד גנים","מתרחש שכפול נוסף"],c:0,e:"בחלוקה שנייה נפרדות כרומטידות, ולכן כל גמטה הפלואידית עם כמות DNA מינימלית."}]};
+function quizHTML(id,t){return '<section class="card"><h3>'+(t||"חידון קצר")+'</h3><div class="quiz" data-q="'+id+'"></div></section>'}
+function mountQuiz(el){var id=el.dataset.q;el.innerHTML="";Q[id].forEach(function(it,qi){var key=id+qi,box=document.createElement("div");box.className="qq";
+function draw(){var idx=sh(it.o.map(function(_,i){return i}));box.innerHTML="<p><b>"+(qi+1)+".</b> "+it.q+"</p>"+idx.map(function(i){return '<button class="opt" data-i="'+i+'">'+it.o[i]+"</button>"}).join("")+'<div class="fb" aria-live="polite"></div>';
+$$(".opt",box).forEach(function(b){b.onclick=function(){var i=+b.dataset.i,ok=i===it.c;$$(".opt",box).forEach(function(x){x.disabled=true;if(+x.dataset.i===it.c&&ok)x.classList.add("right")});if(!ok)b.classList.add("wrong");
+var fb=$(".fb",box);fb.className="fb "+(ok?"good":"bad");fb.innerHTML=(ok?"נכון! ":"לא מדויק. ")+it.e+(ok?"":' <button class="btn retry">נסו שוב</button>');
+award(key);var r=$(".retry",fb);if(r)r.onclick=draw}})}
+draw();el.appendChild(box)})}
+
+/* ---------- איורים ---------- */
+function lineGraph(vals,idx,ttl,ymax){ymax=ymax||4;var W=560,H=210,px=60,py=30,n=vals.length,bw=(W-px-20)/(n-1),by=H-40,sc=(by-py)/ymax,s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+ttl+'"><text x="'+(W/2)+'" y="18" text-anchor="middle">'+ttl+'</text>';
+for(var y=0;y<=ymax;y++){s+='<line x1="'+px+'" x2="'+(W-10)+'" y1="'+(by-y*sc)+'" y2="'+(by-y*sc)+'" stroke="var(--line)"/><text x="'+(px-8)+'" y="'+(by-y*sc+4)+'" text-anchor="end">'+y+'c</text>'}
+var pts=vals.map(function(v,i){return (px+i*bw)+","+(by-v*sc)}),st=[];vals.forEach(function(v,i){if(i)st.push((px+i*bw)+","+(by-vals[i-1]*sc));st.push(pts[i])});
+s+='<polyline points="'+st.join(" ")+'" fill="none" stroke="var(--dna)" stroke-width="3"/>';
+vals.forEach(function(v,i){s+='<circle cx="'+(px+i*bw)+'" cy="'+(by-v*sc)+'" r="'+(i===idx?8:4)+'" fill="'+(i===idx?"var(--chr)":"var(--dna)")+'"/><text x="'+(px+i*bw)+'" y="'+(by+20)+'" text-anchor="middle">'+(i+1)+'</text>'});
+return s+'<text x="14" y="'+(H/2)+'" transform="rotate(-90 14 '+(H/2)+')" text-anchor="middle">כמות DNA יחסית בתא</text><text x="'+(W/2)+'" y="'+(H-4)+'" text-anchor="middle">שלבים לפי הסדר</text></svg>'}
+function glyph(x,y,L,dbl,col){if(!dbl)return '<rect x="'+(x-3)+'" y="'+(y-L/2)+'" width="6" height="'+L+'" rx="3" fill="'+col+'"/>';
+return '<rect x="'+(x-6)+'" y="'+(y-L/2)+'" width="5" height="'+L+'" rx="2.5" fill="'+col+'"/><rect x="'+(x+1)+'" y="'+(y-L/2)+'" width="5" height="'+L+'" rx="2.5" fill="'+col+'"/><circle cx="'+x+'" cy="'+y+'" r="2.5" fill="var(--card)"/>'}
+var FREE=[[-.45,-.3],[.35,-.4],[-.25,.4],[.45,.25],[0,0],[-.55,.05],[.1,-.6],[.1,.6]];
+function cellSvg(sp){var k=sp.k,r=k===1?105:k===2?90:62,cx=k===1?[300]:k===2?[170,430]:[90,230,370,510],s='<svg viewBox="0 0 600 230" role="img" aria-label="'+sp.n+'">';
+cx.forEach(function(X){s+='<circle cx="'+X+'" cy="115" r="'+r+'" class="cellc"/>';if(sp.l==="line"||sp.l==="pair"||sp.l==="split")s+='<line x1="'+(X-r+6)+'" x2="'+(X+r-6)+'" y1="115" y2="115" stroke="var(--mut)" stroke-dasharray="3 5"/>';
+for(var i=0;i<sp.p;i++){var dx,dy,h=sp.p/2;
+if(sp.l==="free"){dx=FREE[i%8][0]*r*.8;dy=FREE[i%8][1]*r*.8}
+else if(sp.l==="line"){dx=(i-(sp.p-1)/2)*r*.42;dy=0}
+else if(sp.l==="pair"){dx=(Math.floor(i/2)-.5)*r*.6+(i%2?8:-8);dy=0}
+else{var g=i<h?-1:1,j=i%h;dx=(j-(h-1)/2)*r*.42;dy=g*r*.5}
+var ls=sp.ls||[26,26,17,17];s+=glyph(X+dx,115+dy,ls[i%ls.length],sp.d,i%2?"var(--chr2)":"var(--chr)")}});return s+"</svg>"}
+
+var MIT=[{n:"G1",k:1,p:4,d:0,l:"free",dna:2,c:4,t:"G1: התא גדל ועושה את תפקידו. בכל כרומוזום מולקולת DNA אחת."},
+{n:"S ו-G2",k:1,p:4,d:1,l:"free",dna:4,c:4,t:"אחרי שלב S ה-DNA שוכפל: כל כרומוזום מורכב משתי כרומטידות אחיות. מספר הכרומוזומים לא השתנה."},
+{n:"פרופאזה",k:1,p:4,d:1,l:"free",dna:4,c:4,t:"הכרומוזומים מתעבים, הקרום הגרעיני נעלם, וסיבי הציר נוצרים."},
+{n:"מטאפאזה",k:1,p:4,d:1,l:"line",dna:4,c:4,t:"הכרומוזומים מסתדרים במישור המשווני, וכל כרומטידה מחוברת לסיבי ציר מצד אחר."},
+{n:"אנאפאזה",k:1,p:8,d:0,l:"split",dna:4,c:8,t:"הכרומטידות נפרדות ונודדות לקטבים. כל כרומטידה היא כעת כרומוזום, ולכן יש זמנית 8."},
+{n:"טלופאזה וציטוקינזה",k:2,p:4,d:0,l:"free",dna:2,c:4,t:"נוצרים שני תאי בת דיפלואידיים, זהים גנטית, עם 4 כרומוזומים כל אחד."}];
+var MEI=[{n:"G1",k:1,p:4,d:0,l:"free",dna:2,c:4,t:"תא דיפלואידי (2n=4): שני זוגות הומולוגיים. אחד מכל זוג מהאב ואחד מהאם."},
+{n:"S ו-G2",k:1,p:4,d:1,l:"free",dna:4,c:4,t:"שכפול ה-DNA. כל כרומוזום מורכב משתי כרומטידות."},
+{n:"פרופאזה I",k:1,p:4,d:1,l:"free",dna:4,c:4,t:"הומולוגים מתחברים (טטראדות) ומתרחש קרוסינג־אובר: חילופי קטעים בין כרומטידות לא אחיות."},
+{n:"מטאפאזה I",k:1,p:4,d:1,l:"pair",dna:4,c:4,t:"זוגות הומולוגיים מסתדרים יחד במישור המשווני. כיוון הסידור אקראי (הרכב גנטי מגוון)."},
+{n:"אנאפאזה I",k:1,p:4,d:1,l:"split",dna:4,c:4,t:"כרומוזומים הומולוגיים נפרדים. הכרומטידות נשארות מחוברות."},
+{n:"טלופאזה I",k:2,p:2,d:1,l:"free",dna:2,c:2,t:"שני תאים הפלואידיים (n=2), כל כרומוזום עדיין כפול. זו החלוקה המצמצמת."},
+{n:"מטאפאזה II",k:2,p:2,d:1,l:"line",dna:2,c:2,t:"בכל תא הכרומוזומים במישור המשווני, ללא שכפול DNA נוסף."},
+{n:"אנאפאזה II",k:2,p:4,d:0,l:"split",dna:2,c:4,t:"הכרומטידות נפרדות, בדומה למיטוזה."},
+{n:"גמטות",k:4,p:2,d:0,l:"free",dna:1,c:2,ls:[26,17],t:"ארבעה תאים הפלואידיים, שונים גנטית זה מזה, עם כרומוזום אחד מכל זוג."}];
+
+/* ---------- הדמיות ---------- */
+function stageSvg(k){var s='<svg viewBox="0 0 600 230" role="img" aria-label="מסלול מ-DNA לחלבון"><ellipse cx="170" cy="115" rx="150" ry="100" class="nuc"/><text x="170" y="32" text-anchor="middle">גרעין</text>';
+s+='<g stroke="var(--dna)" stroke-width="3"><path d="M60 100H280M60 130H280"/>';for(var i=0;i<12;i++)s+='<path d="M'+(70+i*18)+' 100v30" stroke-width="2"/>';s+='</g><text x="170" y="170" text-anchor="middle" fill="var(--dna)" style="fill:var(--dna)">DNA</text>';
+if(k===1)s+='<path d="M60 84H200" stroke="var(--rna)" stroke-width="4"/><text x="130" y="72" text-anchor="middle" style="fill:var(--rna)">mRNA נוצר</text>';
+if(k>=2){var x=k===2?330:400;s+='<path d="M'+x+' 84h120" stroke="var(--rna)" stroke-width="4"/><text x="'+(x+60)+'" y="72" text-anchor="middle" style="fill:var(--rna)">mRNA</text>'}
+if(k===3){s+='<ellipse cx="460" cy="115" rx="45" ry="22" fill="var(--chr2)"/><text x="460" y="120" text-anchor="middle">ריבוזום</text>';for(var j=0;j<5;j++)s+='<circle cx="'+(430+j*18)+'" cy="170" r="8" fill="var(--pro)"/>';s+='<text x="480" y="205" text-anchor="middle" style="fill:var(--pro)">שרשרת חלבון</text>'}
+return s+"</svg>"}
+var OST=["DNA בגרעין שומר את המידע.","שעתוק: נוצר mRNA לפי גדיל התבנית של הגן.","ה-mRNA יוצא דרך הנקבוביות אל הציטופלזמה.","תרגום: הריבוזום קורא קודונים ובונה חלבון."];
+function mountOpen(){var k=0;function r(){$("#ost").innerHTML=stageSvg(k)+"<p><b>שלב "+(k+1)+" מתוך 4:</b> "+OST[k]+"</p>";$("#op").disabled=k===0;$("#on").disabled=k===3}
+$("#op").onclick=function(){k--;r()};$("#on").onclick=function(){k++;r()};r()}
+
+function mountGen(){
+function pair(){var raw=$("#seq").value.toUpperCase().replace(/[^ATGC]/g,"").slice(0,14),C={A:"T",T:"A",G:"C",C:"G"},col={A:"#d6455d",T:"#c98a10",G:"#1b8f5f",C:"#2563c9"},s='<svg viewBox="0 0 600 190" role="img" aria-label="זיווג בסיסים"><text x="590" y="30" text-anchor="end">גדיל 1</text><text x="590" y="170" text-anchor="end">גדיל 2</text>',gc=0,hb=0;
+raw.split("").forEach(function(b,i){var x=540-i*38,c=C[b],g=(b==="G"||b==="C");gc+=g?1:0;hb+=g?3:2;
+s+='<circle cx="'+x+'" cy="40" r="15" fill="'+col[b]+'"/><circle cx="'+x+'" cy="150" r="15" fill="'+col[c]+'"/><text x="'+x+'" y="45" text-anchor="middle" style="fill:#fff;font-weight:700">'+b+'</text><text x="'+x+'" y="155" text-anchor="middle" style="fill:#fff;font-weight:700">'+c+'</text>';
+for(var h=0;h<(g?3:2);h++)s+='<line x1="'+(x-6+h*6)+'" x2="'+(x-6+h*6)+'" y1="60" y2="130" stroke="var(--mut)" stroke-dasharray="3 3"/>'});
+$("#pst").innerHTML=s+"</svg>";$("#pinfo").textContent=raw.length?"אורך: "+raw.length+" זוגות בסיסים · G+C: "+Math.round(gc/raw.length*100)+"% · קשרי מימן: "+hb+" (2 בין A-T, 3 בין G-C)":"הקלידו רצף של האותיות A,T,G,C."}
+$("#seq").oninput=pair;$("#rnd").onclick=function(){$("#seq").value=Array.apply(null,Array(10)).map(function(){return "ATGC"[Math.floor(Math.random()*4)]}).join("");pair()};pair();
+function rep(){var v=+$("#rep").value,p=70+490*v/100,s='<svg viewBox="0 0 600 220" role="img" aria-label="שכפול DNA"><path d="M40 70H'+(p-30)+'L'+p+' 105H560M40 160H'+(p-30)+'L'+p+' 125H560" fill="none" stroke="var(--dna)" stroke-width="4"/><path d="M40 92H'+(p-30)+'M40 138H'+(p-30)+'" fill="none" stroke="var(--rna)" stroke-width="4"/>';
+s+='<text x="590" y="25" text-anchor="end" style="fill:var(--dna)">גדיל ישן</text><text x="590" y="205" text-anchor="end" style="fill:var(--rna)">גדיל חדש</text>';if(v>4&&v<96)s+='<text x="'+p+'" y="190" text-anchor="middle">מזלג שכפול</text><text x="'+p+'" y="22" text-anchor="middle">הליקאז ו-DNA פולימראז</text>';
+$("#rst").innerHTML=s+"</svg>";$("#rtx").textContent=v<5?"DNA דו-גדילי לפני השכפול.":v>95?"שתי מולקולות: בכל אחת גדיל ישן וגדיל חדש.":"ההליקאז פותח את הסליל, וה-DNA פולימראז בונה גדיל משלים לכל גדיל תבנית."}
+$("#rep").oninput=rep;rep();
+function gens(){var n=+$("#gen").value,tot=Math.pow(2,n),W=560,s='<svg viewBox="0 0 600 160" role="img" aria-label="מולקולות לפי דורות"><text x="300" y="18" text-anchor="middle">מולקולות DNA אחרי '+n+' שכפולים (כחול: מכילות גדיל ישן)</text>',w=Math.min(30,W/tot-3);
+for(var i=0;i<Math.min(tot,32);i++){var old=i<(n===0?1:2);s+='<rect x="'+(580-(i+1)*(w+3))+'" y="50" width="'+w+'" height="60" rx="4" fill="'+(old?"var(--dna)":"var(--rna)")+'"/>'}
+$("#gst").innerHTML=s+'<text x="300" y="145" text-anchor="middle">סה״כ '+tot+' מולקולות, מהן '+(n===0?1:2)+' עם גדיל ישן</text></svg>'}
+$("#gen").oninput=gens;gens()}
+
+function mountCycle(id,A,gv,ymax){var el=$("#"+id+"s");function r(){var v=+el.value,sp=A[v];$("#"+id+"c").innerHTML=cellSvg(sp);$("#"+id+"g").innerHTML=lineGraph(gv,v,"כמות ה-DNA בתא לאורך התהליך",ymax);
+$("#"+id+"t").innerHTML="<b>"+(v+1)+". "+sp.n+"</b> – "+sp.t+"<br>כרומוזומים בכל תא: <b>"+sp.c+"</b> · כמות DNA בתא: <b>"+sp.dna+"c</b> · מספר תאים: <b>"+sp.k+"</b>"}
+el.oninput=r;$("#"+id+"p").onclick=function(){el.value=Math.max(0,+el.value-1);r()};$("#"+id+"n").onclick=function(){el.value=Math.min(A.length-1,+el.value+1);r()};r()}
+function simBlock(id,A,lbl){return '<div class="row"><button class="btn alt" id="'+id+'p">הקודם</button><input type="range" id="'+id+'s" min="0" max="'+(A.length-1)+'" value="0" aria-label="'+lbl+'"><button class="btn alt" id="'+id+'n">הבא</button></div><div id="'+id+'c"></div><p id="'+id+'t"></p><div id="'+id+'g"></div>'}
+
+var CT="FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",TL={F:"Phe",L:"Leu",S:"Ser",Y:"Tyr","*":"עצירה",C:"Cys",W:"Trp",P:"Pro",H:"His",Q:"Gln",R:"Arg",I:"Ile",M:"Met",T:"Thr",N:"Asn",K:"Lys",V:"Val",A:"Ala",D:"Asp",E:"Glu",G:"Gly"};
+function mrna(t){return t.split("").map(function(b){return {A:"U",T:"A",G:"C",C:"G"}[b]}).join("")}
+function prot(m){var st=m.indexOf("AUG"),a=[],cd=[];if(st<0)return {cd:[],aa:[]};for(var i=st;i+2<m.length;i+=3){var c=m.substr(i,3),ix="UCAG",v=CT[16*ix.indexOf(c[0])+4*ix.indexOf(c[1])+ix.indexOf(c[2])];cd.push(c);a.push(v);if(v==="*")break}return {cd:cd,aa:a}}
+var ORIG="TACGGTCAATTCATT";
+function mountProt(){var tpl=ORIG;
+function show(){var m=mrna(tpl),P=prot(m),t=+$("#rib").value;$("#rib").max=P.cd.length;
+var h='<div class="seq" title="גדיל תבנית">'+tpl.split("").map(function(b){return "<span class='dna'>"+b+"</span>"}).join("")+'</div><div class="seq">'+m.split("").map(function(b){return "<span class='rna'>"+b+"</span>"}).join("")+"</div>";
+h+='<div class="seq">'+P.cd.map(function(c,i){return '<span class="cod'+(i===t-1?" cur":"")+'">'+c+"</span>"}).join("")+'</div><div class="seq">'+P.aa.map(function(a,i){return i<t?'<span class="aa'+(i===t-1?" cur":"")+'">'+TL[a]+"</span>":'<span style="opacity:.3">?</span>'}).join("")+"</div>";
+$("#pout").innerHTML=h;var cur=P.cd[t-1];$("#pnote").innerHTML=cur?(P.aa[t-1]==="*"?"קודון עצירה: אין tRNA מתאים, והחלבון משתחרר מהריבוזום.":"tRNA עם אנטי-קודון <b dir=ltr>"+cur.split("").map(function(b){return {A:"U",U:"A",G:"C",C:"G"}[b]}).join("")+"</b> (משלים ל-"+cur+") מביא "+TL[P.aa[t-1]]+"."):"הזיזו את הסרגל כדי להתקדם בריבוזום (שורה ראשונה: DNA תבנית, שנייה: mRNA, שלישית: קודונים, רביעית: חלבון).";
+var O=prot(mrna(ORIG)),diff=0;for(var i=0;i<ORIG.length;i++)if(ORIG[i]!==tpl[i])diff++;
+$("#mut").innerHTML=diff===0?"אין מוטציה.":"השוואה לחלבון המקורי ("+O.aa.map(function(a){return TL[a]}).join("-")+"): "+(P.aa.join("")===O.aa.join("")?"<b>מוטציה שקטה</b>, אותו חלבון.":P.aa.length<O.aa.length&&P.aa[P.aa.length-1]==="*"?"<b>מוטציית עצירה מוקדמת</b>: חלבון קצר.":"<b>מוטציית החלפה</b> או הסטת מסגרת: החלבון השתנה.")}
+$("#rib").oninput=show;$("#mutb").onclick=function(){var i=Math.floor(Math.random()*tpl.length),o=tpl[i],n=sh("ATGC".replace(o,"").split(""))[0];tpl=tpl.slice(0,i)+n+tpl.slice(i+1);show()};$("#undo").onclick=function(){tpl=ORIG;show()};show()}
+
+/* ---------- תרגול ---------- */
+var MT=[["קודון","שלישיית נוקלאוטידים ב-mRNA המקודדת לחומצה אמינית"],["אנטי-קודון","שלישייה ב-tRNA המשלימה לקודון"],["כרומטידה","אחד משני עותקים זהים של כרומוזום משוכפל"],["הומולוגיים","כרומוזומים זוגיים עם אותם גנים, אחד מכל הורה"],["קרוסינג־אובר","חילופי קטעים בין כרומטידות של כרומוזומים הומולוגיים"],["גן","קטע DNA המקודד לתוצר"]];
+var CL=[["נוצרים ארבעה תאים","מיוזה"],["התאים שנוצרים זהים גנטית לתא האם","מיטוזה"],["לפני החלוקה מתרחש שכפול DNA","שניהם"],["מתרחשת חלוקה אחת בלבד","מיטוזה"],["מתרחש קרוסינג־אובר","מיוזה"],["נוצרות גמטות","מיוזה"],["מתרחשת בתאי גוף לצורך גדילה ותיקון","מיטוזה"]];
+var ORD=["אינטרפאזה (שכפול)","פרופאזה","מטאפאזה","אנאפאזה","טלופאזה"];
+function mountPractice(){
+var defs=sh(MT.map(function(m){return m[1]}));$("#match").innerHTML="<table>"+MT.map(function(m,i){return "<tr><th>"+m[0]+'</th><td><select data-i="'+i+'" aria-label="'+m[0]+'"><option value="">בחרו הגדרה</option>'+defs.map(function(d){return "<option>"+d+"</option>"}).join("")+'</select> <span class="mk"></span></td></tr>'}).join("")+"</table>";
+$("#mchk").onclick=function(){$$("#match select").forEach(function(s){var i=+s.dataset.i,ok=s.value===MT[i][1],m=s.parentNode.querySelector(".mk");m.textContent=ok?"✓":"✗";m.className="mk "+(ok?"ok":"no");award("m"+i)})};
+$("#cls").innerHTML=CL.map(function(c,i){return '<div class="qq"><p>'+c[0]+'</p><div data-i="'+i+'">'+["מיטוזה","מיוזה","שניהם"].map(function(o){return '<button class="pick">'+o+"</button>"}).join("")+'</div><div class="fb"></div></div>'}).join("");
+$$("#cls .pick").forEach(function(b){b.onclick=function(){var d=b.parentNode,i=+d.dataset.i,ok=b.textContent===CL[i][1],fb=d.nextSibling;fb.className="fb "+(ok?"good":"bad");fb.textContent=ok?"נכון!":"לא מדויק. התשובה הנכונה: "+CL[i][1];award("c"+i)}});
+var order=[],pool=sh(ORD);function ordR(){$("#ordp").innerHTML=pool.map(function(p){return order.indexOf(p)<0?'<button class="pick">'+p+"</button>":""}).join("");$("#ordo").textContent=order.join(" ← ");
+$$("#ordp .pick").forEach(function(b){b.onclick=function(){order.push(b.textContent);ordR();if(order.length===ORD.length){var ok=order.join()===ORD.join();$("#ordf").className="fb "+(ok?"good":"bad");$("#ordf").textContent=ok?"נכון! הסדר מושלם.":"הסדר שגוי. נסו שוב.";award("ord")}}})}
+$("#ordx").onclick=function(){order=[];pool=sh(ORD);$("#ordf").textContent="";ordR()};ordR();
+$("#gg").innerHTML=lineGraph([2,4,4,4,4,2,2,2,1],-1,"תהליך חלוקה: כמות DNA לאורך השלבים")}
+
+/* ---------- בגרות ---------- */
+var BG=[{t:"שאלה 1 – מבנה ה-DNA",c:'<p>בדגימת DNA דו-גדילי של חיידק נמצא כי אחוז הבסיס A הוא 28%.</p><table><tr><th>בסיס</th><th>A</th><th>T</th><th>G</th><th>C</th></tr><tr><td>אחוז</td><td>28</td><td>?</td><td>?</td><td>?</td></tr></table>',p:[["חשבו את אחוזי T, G ו-C בדגימה (3 נק׳).","T=28% (A=T). A+T=56%, לכן G+C=44% ו-G=C=22%."],["הסבירו על פי מבנה ה-DNA מדוע A=T ו-G=C (4 נק׳).","הגדילים משלימים: A נקשר ל-T בשני קשרי מימן, ו-G ל-C בשלושה. לכן כמות A שווה לכמות T."],["בדגימה אחרת נמצא A=30% ו-T=22%. מה ניתן להסיק (3 נק׳)?","אין שוויון A=T, ולכן אינו DNA דו-גדילי רגיל. יתכן DNA חד-גדילי או RNA."]]},
+{t:"שאלה 2 – חלוקת תא",c:'<p>בגרף מוצגת כמות ה-DNA בתא אחד לאורך תהליך חלוקה.</p><div id="bg2"></div>',p:[["איזה תהליך מוצג? נמקו (3 נק׳).","מיוזה: יש שתי ירידות בכמות ה-DNA, אחרי שכפול אחד."],["מה מתרחש בין נקודה 1 לנקודה 2 (2 נק׳)?","שכפול DNA בשלב S: כל כרומוזום הופך לשתי כרומטידות."],["הסבירו במה שונה הירידה הראשונה מהשנייה ברמת הכרומוזומים (5 נק׳).","בירידה הראשונה נפרדים כרומוזומים הומולוגיים (חלוקה מצמצמת, כל תא הפלואידי). בשנייה נפרדות כרומטידות אחיות, ובכל גמטה כרומוזום יחיד מכל זוג."]]},
+{t:"שאלה 3 – מ-DNA לחלבון",c:'<p>קטע מגדיל התבנית של גן: <b dir="ltr">3′-TAC GGT CAA TTC ATT-5′</b></p>',p:[["כתבו את רצף ה-mRNA ואת רצף חומצות האמינו (4 נק׳).","mRNA: AUG CCA GUU AAG UAA. חלבון: Met-Pro-Val-Lys, ואחריו קודון עצירה."],["בגדיל התבנית הוחלף CAA ב-CAG. מה ההשפעה על החלבון? (3 נק׳)","הקודון הופך ל-GUC, שגם הוא מקודד ל-Val. מוטציה שקטה (קוד מנוון), החלבון לא משתנה."],["הוחלף TTC ב-ATC. מה ההשפעה? (3 נק׳)","הקודון הופך ל-UAG, קודון עצירה. החלבון קצר (Met-Pro-Val) וכנראה אינו פעיל."]]}];
+function bagrut(){return BG.map(function(q,qi){return '<section class="card"><h3>'+q.t+"</h3>"+q.c+q.p.map(function(p,pi){var k="b"+qi+pi;return '<div class="qq"><p><b>'+"אבג"[pi]+".</b> "+p[0]+'</p><textarea aria-label="תשובה"></textarea><div class="row"><button class="btn alt show">תשובה לדוגמה</button></div><div class="sample">'+p[1]+'<div class="row"><button class="btn good" data-k="'+k+'">ענו נכון</button><button class="btn alt bad2">צריך חיזוק</button></div></div></div>'}).join("")+"</section>"}).join("")}
+function mountBagrut(){$("#bg2").innerHTML=lineGraph([2,4,4,2,1],-1,"כמות DNA בתא",4);
+$$(".show").forEach(function(b){b.onclick=function(){b.parentNode.nextSibling.classList.toggle("show")}});
+$$(".good").forEach(function(b){b.onclick=function(){award(b.dataset.k);b.textContent="נרשם ✓";b.disabled=true}});$$(".bad2").forEach(function(b){b.onclick=function(){var g=$(".good",b.parentNode);S.att[g.dataset.k]=1;save();b.textContent="נסו שוב מאוחר יותר"}})}
+
+/* ---------- שלבים ---------- */
+var term=function(c,t,d){return '<div class="term t-'+c+'"><b>'+t+"</b><br>"+d+"</div>"};
+var STEPS=[
+{t:"פתיחה",r:function(){return "<h2>איך מידע תורשתי הופך לתכונה?</h2><p>החומר התורשתי הוא DNA. הוא מאורגן בכרומוזומים, ומתוכו נקראים גנים שמקודדים לחלבונים. הצבעים כאן קבועים לאורך הפעילות.</p><div class='grid'>"+term("dna","DNA","מולקולת המידע, בגרעין")+term("rna","RNA","מתווך: mRNA, tRNA, rRNA")+term("pro","חלבון","התוצר שקובע תכונה")+term("chr","כרומוזום וכרומטידה","אריזת ה-DNA וחלוקתו")+"</div><section class='card'><h3>הדמיה: מ-DNA לחלבון</h3><div id='ost'></div><div class='row'><button class='btn alt' id='op'>הקודם</button><button class='btn alt' id='on'>הבא</button></div></section>"+quizHTML("open")},m:mountOpen},
+{t:"סקירה",r:function(){return "<h2>סקירה: שני סוגי חלוקה</h2><p>בחרו תהליך וראו איך כמות ה-DNA בתא משתנה (c = כמות DNA בסיסית).</p><div class='row'><button class='btn' id='gm'>מיטוזה</button><button class='btn alt' id='gi'>מיוזה</button></div><div id='ovg'></div><section class='card'><table><tr><th></th><th>מיטוזה</th><th>מיוזה</th></tr><tr><th>מספר חלוקות</th><td>1</td><td>2</td></tr><tr><th>תאים שנוצרים</th><td>2</td><td>4</td></tr><tr><th>סוג התאים</th><td>דיפלואידיים, זהים</td><td>הפלואידיים, שונים</td></tr><tr><th>תפקיד</th><td>גדילה ותיקון</td><td>יצירת גמטות</td></tr></table></section>"},
+ m:function(){function g(a){$("#ovg").innerHTML=lineGraph(a?[2,4,4,4,4,2,2,2,1]:[2,4,4,4,4,2],-1,a?"מיוזה":"מיטוזה");$("#gm").className="btn"+(a?" alt":"");$("#gi").className="btn"+(a?"":" alt")}$("#gm").onclick=function(){g(0)};$("#gi").onclick=function(){g(1)};g(0)}},
+{t:"חומר תורשתי",r:function(){return "<h2>חומר תורשתי: מבנה ושכפול</h2><p>ה-DNA הוא סליל כפול. הגדילים משלימים: A-T בשני קשרי מימן, G-C בשלושה. כתבו רצף וראו את הזיווג.</p><section class='card'><div class='row'><input type='text' id='seq' value='ATGCCGTA' dir='ltr' maxlength='14' aria-label='רצף'><button class='btn alt' id='rnd'>רצף אקראי</button></div><div id='pst'></div><p id='pinfo'></p></section><section class='card'><h3>שכפול (שמרני למחצה)</h3><div class='row'><span>התקדמות:</span><input type='range' id='rep' min='0' max='100' value='45' aria-label='התקדמות השכפול'></div><div id='rst'></div><p id='rtx'></p></section><section class='card'><h3>מספר שכפולים</h3><div class='row'><input type='range' id='gen' min='0' max='5' value='3' aria-label='מספר שכפולים'></div><div id='gst'></div></section>"+quizHTML("gen")},m:mountGen},
+{t:"מחזור התא ומיטוזה",r:function(){return "<h2>מחזור התא ומיטוזה</h2><p>האינטרפאזה (G1, S, G2) מכינה את התא; אחריה חלוקה. הזיזו את הסרגל בין השלבים.</p><section class='card'>"+simBlock("mi",MIT,"שלב במיטוזה")+"</section>"+quizHTML("cyc")},m:function(){mountCycle("mi",MIT,[2,4,4,4,4,2],4)}},
+{t:"מיוזה",r:function(){return "<h2>מיוזה: חלוקה מצמצמת</h2><p>תא דיפלואידי (2n=4) יוצר ארבע גמטות הפלואידיות. שימו לב לאנאפאזה I לעומת אנאפאזה II.</p><section class='card'>"+simBlock("me",MEI,"שלב במיוזה")+"</section>"+quizHTML("mei")},m:function(){mountCycle("me",MEI,[2,4,4,4,4,2,2,2,1],4)}},
+{t:"מ-DNA לחלבון",r:function(){return "<h2>מ-DNA לחלבון</h2><div class='grid'>"+term("rna","mRNA","נושא את הקודונים מהגרעין לריבוזום")+term("rna","tRNA","נושא חומצה אמינית ואנטי-קודון")+term("rna","rRNA","מרכיב את הריבוזום")+"</div><section class='card'><h3>קוראים את הגן</h3><p>גדיל התבנית (כחול), ה-mRNA (כתום), הקודונים והחלבון (ירוק). התרגום מתחיל ב-AUG.</p><div class='row'><span>ריבוזום:</span><input type='range' id='rib' min='0' max='5' value='0' aria-label='התקדמות הריבוזום'></div><div id='pout'></div><p id='pnote'></p><div class='row'><button class='btn alt' id='mutb'>הכניסו מוטציה אקראית</button><button class='btn alt' id='undo'>חזרה למקור</button></div><p id='mut'></p></section>"+quizHTML("prot")},m:mountProt},
+{t:"תרגול",r:function(){return "<h2>תרגול</h2><section class='card'><h3>התאמת מושגים להגדרות</h3><div id='match'></div><div class='row'><button class='btn' id='mchk'>בדיקה</button></div></section><section class='card'><h3>מיון טענות</h3><div id='cls'></div></section><section class='card'><h3>סדרו את שלבי המיטוזה</h3><div id='ordp'></div><p id='ordo'></p><div id='ordf' class='fb'></div><button class='btn alt' id='ordx'>התחלה מחדש</button></section><section class='card'><h3>קריאת גרף</h3><div id='gg'></div></section>"+quizHTML("graph","שאלות על הגרף")+quizHTML("tf","נכון או לא נכון")},m:mountPractice},
+{t:"שאלות בגרות",r:function(){return "<h2>שאלות בסגנון בגרות</h2><p>כתבו תשובה, הציגו תשובה לדוגמה והעריכו את עצמכם.</p>"+bagrut()},m:mountBagrut}];
+
+function go(i){S.step=Math.max(0,Math.min(STEPS.length-1,i));S.seen[S.step]=1;save();render();window.scrollTo(0,0)}
+function render(){var s=STEPS[S.step];$("#main").innerHTML=s.r()+'<div class="foot"><button class="btn alt" id="pv"'+(S.step===0?" disabled":"")+'>הקודם</button><button class="btn" id="nx"'+(S.step===STEPS.length-1?" disabled":"")+'>הבא</button></div>';
+if(s.m)s.m();$$(".quiz").forEach(mountQuiz);$("#pv").onclick=function(){go(S.step-1)};$("#nx").onclick=function(){go(S.step+1)};
+$("#nav").innerHTML=STEPS.map(function(t,i){return '<button class="st'+(i===S.step?" on":"")+(S.seen[i]?" seen":"")+'" data-i="'+i+'">'+(i+1)+". "+t.t+"</button>"}).join("");$$(".st").forEach(function(b){b.onclick=function(){go(+b.dataset.i)}});
+$("#prog").style.width=Math.round(Object.keys(S.seen).length/STEPS.length*100)+"%";upd()}
+function theme(d){document.documentElement.setAttribute("data-theme",d?"dark":"light")}
+var dm=S.dark;if(dm===undefined)dm=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches;theme(dm);
+$("#dark").onclick=function(){dm=!dm;S.dark=dm;save();theme(dm)};
+$("#reset").onclick=function(){if(confirm("לאפס את הניקוד וההתקדמות?")){S={step:0,ok:{},att:{},seen:{},dark:dm};save();go(0)}};
+S.seen[S.step]=1;render();
+})();
+</script>
+</body>
+</html>
